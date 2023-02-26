@@ -14,8 +14,7 @@ function UserSignOut( props ) {
 	  { (ctx) => {
 		signout = ctx.signOut;
 		return <Redirect to="/"/>
-	  }
-	  }
+	  }}
 	  </Consumer>
 	);
 };

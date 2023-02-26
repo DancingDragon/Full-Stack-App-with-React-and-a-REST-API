@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import Cookies from 'js-cookie';
 const Context = React.createContext(); 
 
 export class Provider extends Component {
 	constructor() {
 		super();
 		this.state = {
-			authenticatedUser: null
+			authenticatedUser: Cookies.get('authenticatedUser') ? JSON.parse(Cookies.get('authenticatedUser')) : null
 		};
 	}
 	
@@ -37,8 +38,11 @@ export class Provider extends Component {
 		if (response.status === 200) {
 			const user = await response.json()
 			user.password = password;
+			Cookies.set('authenticatedUser', JSON.stringify(user))
 			this.setState({authenticatedUser : user});
-			props.history.push("/");
+			try {var from = props.location.state.from;} 
+			catch (error) { from = null };
+			from ? props.history.push(from): props.history.goBack();
 		} else {
 			console.log("Cant log in");
 		}
@@ -46,6 +50,7 @@ export class Provider extends Component {
 	}
 	
 	signOut = () => {
+		Cookies.remove('authenticatedUser');
 		this.setState({authenticatedUser:null});
 	}
 	

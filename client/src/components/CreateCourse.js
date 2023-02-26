@@ -1,6 +1,4 @@
-import React, {createRef} from 'react';
-import ReactDOM from 'react-dom';
-import {useState, useEffect} from 'react';
+import React, {createRef, useState} from 'react';
 import {Consumer} from './Context';
 import { withRouter } from "react-router-dom";
 
