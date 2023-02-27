@@ -25,10 +25,12 @@ function Courses({history}) {
 				.then(response => {
 					if (response.status === 201) {
 						history.push('/');
-					} else {
+					} else if (response.status === 400) {
 						response.json().then(data => {
 							setErrors(data.errors);
 						})
+					} else if (response.status === 500) {
+						history.push(`/error`);
 					}
 				})
 			}

@@ -1,6 +1,6 @@
 import React, {createRef} from 'react';
 import {useState, useEffect} from 'react';
-import {withRouter} from 'react-router-dom';
+import {withRouter, Redirect} from 'react-router-dom';
 import {Consumer} from './Context';
 
 function Courses({history, ...props}) {
@@ -24,10 +24,14 @@ function Courses({history, ...props}) {
 		.then(json => {
 			setCourse(json)
 			setCourseUser(json.User);
-	}
-		)
+			console.log(courseUser)
+		})
 		.catch(err => {
-			history.push("/not-found");
+			if (err.message === '404') {
+				history.push("/not-found");
+			} else if (err.message === '500') {
+				history.push("/error");
+			}
 		})
 	}, []);
 	
@@ -49,14 +53,19 @@ function Courses({history, ...props}) {
 				.then(response => {
 					if (response.status === 204) {
 						history.push(`/courses/${id}`);
-					} else {
+					} else if (response.status === 400) {
 						response.json().then(data => {
 							setErrors(data.errors);
 						})
+					} else if (response.status === 500) {
+						history.push(`/error`);
 					}
 				})
 			}
 			
+			if (courseUser.id && authenticatedUser.id !== courseUser.id) {
+				return <Redirect to="/"/>
+			}
 			return (
 				<div className="wrap">
 				  <h2>Update Course</h2>

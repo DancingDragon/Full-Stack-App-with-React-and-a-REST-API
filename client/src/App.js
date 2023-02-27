@@ -21,7 +21,9 @@ import CreateCourse from './components/CreateCourse';
 import UpdateCourse from './components/UpdateCourse';
 import PrivateRoute from './components/PrivateRoute';
 
+import Forbidden from './components/Forbidden';
 import NotFound from './components/NotFound';
+import Error from './components/Error';
 
 function App() {
 	
@@ -38,7 +40,9 @@ function App() {
 					<PrivateRoute exact path="/courses/create" component={CreateCourse} />
 					<Route exact path="/courses/:id" component={CourseDetail} />
 					<PrivateRoute exact path="/courses/:id/update" component={UpdateCourse} />
-									
+					<Route path="/forbidden" component={Forbidden} />				
+					<Route path="/error" component={Error} />				
+
 					<Route path="/" component={NotFound} />
 				</Switch>
 			</main>

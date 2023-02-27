@@ -38,11 +38,13 @@ export class Provider extends Component {
 		if (response.status === 200) {
 			const user = await response.json()
 			user.password = password;
-			Cookies.set('authenticatedUser', JSON.stringify(user))
+			Cookies.set('authenticatedUser', JSON.stringify(user), {SameSite:'strict'})
 			this.setState({authenticatedUser : user});
 			try {var from = props.location.state.from;} 
 			catch (error) { from = null };
 			from ? props.history.push(from): props.history.goBack();
+		} else if (response.status === 500) {
+			props.history.push(`/error`);
 		} else {
 			console.log("Cant log in");
 		}
@@ -50,7 +52,7 @@ export class Provider extends Component {
 	}
 	
 	signOut = () => {
-		Cookies.remove('authenticatedUser');
+		Cookies.remove('authenticatedUser', {SameSite:'strict'});
 		this.setState({authenticatedUser:null});
 	}
 	
