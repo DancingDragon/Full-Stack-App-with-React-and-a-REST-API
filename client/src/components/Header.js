@@ -1,6 +1,5 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
-
 import {Consumer} from './Context';
 
 function Header() {
@@ -15,6 +14,7 @@ function Header() {
 			<nav>
 			  <ul className="header--signedout">
 				{ ctx.authenticatedUser ? 
+				//Show user if authenticated
 				<React.Fragment>
 				<li>
 				Welcome {ctx.authenticatedUser.firstName}
@@ -24,6 +24,7 @@ function Header() {
 				</li>
 				</React.Fragment>
 				:
+				//otherwise show login/up links
 				<React.Fragment>
 				<li>
 				  <Link to="/signup">Sign Up</Link>

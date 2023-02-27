@@ -1,19 +1,19 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import {useState, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Consumer} from './Context';
 import {withRouter, Link} from 'react-router-dom';
 import ReactMarkdown from 'react-markdown'
 
 
 function CourseDetail({history, ...props}) {
+	//Use state to keep track of the courseinfo and associated user
 	const [course, setCourse] = useState({})
 	const [courseUser, setCourseUser] = useState({})
 
-	
+	//get the id of the course from the URL
 	let {id} = props.match.params;
 	
 	useEffect(() => {
+		//fetch the courseinfo from the api
 		fetch(`http://localhost:5000/api/courses/${id}`)
 		.then(res => {
 			if (res.status === 200) {
@@ -28,6 +28,7 @@ function CourseDetail({history, ...props}) {
 	}
 		)
 		.catch(err => {
+			//if something went wrong redirect to appropriate page
 			if (err.message === '404') {
 				history.push("/not-found");
 			} else if (err.message === '500') {
@@ -39,15 +40,17 @@ function CourseDetail({history, ...props}) {
 	return (
 	  <Consumer>
 		{ ({authenticatedUser}) => {
+			//Handle deleting a course
 			const deleteCourse = (e) => {
 				e.preventDefault();
+				//set header for delete request to the api with basic auth
 				const requestOptions = {
 					method: 'DELETE',
 					headers: new Headers({
 						'Authorization': 'Basic '+btoa(`${authenticatedUser.emailAddress}:${authenticatedUser.password}`)
 					}),
 				};
-						
+				//send request and go to dashboard
 				fetch(`http://localhost:5000/api/courses/${id}`, requestOptions)
 				.then(response => {
 					history.push('/');
@@ -58,6 +61,7 @@ function CourseDetail({history, ...props}) {
 				<React.Fragment>
 				  <div className="actions--bar">
 					<div className="wrap">
+					//If user if associated with the course show the update/delete buttons
 					  {authenticatedUser && authenticatedUser.id === courseUser.id ? 
 						<React.Fragment>
 

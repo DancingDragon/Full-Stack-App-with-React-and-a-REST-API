@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import Cookies from 'js-cookie';
+
+//initiate context
 const Context = React.createContext(); 
 
 export class Provider extends Component {
 	constructor() {
 		super();
 		this.state = {
+			//grab authenticatedUser from cookie if it exists
 			authenticatedUser: Cookies.get('authenticatedUser') ? JSON.parse(Cookies.get('authenticatedUser')) : null
 		};
 	}
@@ -19,6 +22,7 @@ export class Provider extends Component {
 			signUp: this.signUp
 		} 
 		
+		//return children components wrappen in a provider
 		return(
 			<Context.Provider value={value}>
 				{this.props.children}
@@ -26,7 +30,9 @@ export class Provider extends Component {
 		);	
 	}
 	
+	//handles Signing in user
 	signIn = async (email, password, props) => {
+		//Set up headers for a get request with basic auth 
 		const requestOptions = {
 			method: 'GET',
 			headers: new Headers({
@@ -34,15 +40,24 @@ export class Provider extends Component {
 				'Content-Type': 'application/json'
 			})
 		};
+		//Send request to api
 		const response = await fetch('http://localhost:5000/api/users', requestOptions);
+		//If everythings fine
 		if (response.status === 200) {
 			const user = await response.json()
 			user.password = password;
+			//Set a cookie with the returned user + password
 			Cookies.set('authenticatedUser', JSON.stringify(user), {SameSite:'strict'})
 			this.setState({authenticatedUser : user});
-			try {var from = props.location.state.from;} 
-			catch (error) { from = null };
-			from ? props.history.push(from): props.history.goBack();
+			
+			//If we were redirected from somewhere go to that location
+			try {
+				props.history.push(props.location.state.from);
+			} 
+			//otherwise go back.
+			catch (error) { 
+				props.history.goBack() 
+			};
 		} else if (response.status === 500) {
 			props.history.push(`/error`);
 		} else {
@@ -51,7 +66,9 @@ export class Provider extends Component {
         
 	}
 	
+	//Handles signing out users
 	signOut = () => {
+		//remove cookie and remove user from state.
 		Cookies.remove('authenticatedUser', {SameSite:'strict'});
 		this.setState({authenticatedUser:null});
 	}

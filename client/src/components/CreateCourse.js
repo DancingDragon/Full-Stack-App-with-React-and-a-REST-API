@@ -1,35 +1,43 @@
-import React, {createRef, useState} from 'react';
+import {createRef, useState} from 'react';
 import {Consumer} from './Context';
 import { withRouter } from "react-router-dom";
 
 function Courses({history}) {
-
+	//Use state to keep track of errors
 	const [errors, setErrors] = useState([]);
+	//use ref for the form
 	var courseform = createRef();
 	
 	return (
 		<Consumer>
 		{ ({authenticatedUser}) => {
+			//Function for sending post requset to API
 			const createCourse = (e) => {
 				e.preventDefault();
+				//set up headers with basic auth
 				const requestOptions = {
 					method: 'POST',
 					headers: new Headers({
 						'Content-Type': 'application/json',
 						'Authorization': 'Basic '+btoa(`${authenticatedUser.emailAddress}:${authenticatedUser.password}`)
 					}),
+					//read the body from the form.
 					body: JSON.stringify(Object.fromEntries(new FormData(courseform.current)))
 				};
-						
+				//send request
 				fetch('http://localhost:5000/api/courses/', requestOptions)
 				.then(response => {
 					if (response.status === 201) {
 						history.push('/');
-					} else if (response.status === 400) {
+					} 
+					//if bad request update validation errors
+					else if (response.status === 400) {
 						response.json().then(data => {
 							setErrors(data.errors);
 						})
-					} else if (response.status === 500) {
+					} 
+					//if server error redirect to /error
+					else if (response.status === 500) {
 						history.push(`/error`);
 					}
 				})
@@ -39,6 +47,7 @@ function Courses({history}) {
 				<div className="wrap">
 				  <h2>Create Course</h2>
 				  {
+					  //Show validation errors if there are any
 					  errors.length > 0 ? 
 						  <div className="validation--errors">
 							<h3>Validation Errors</h3>

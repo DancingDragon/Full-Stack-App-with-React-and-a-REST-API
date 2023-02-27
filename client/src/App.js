@@ -1,6 +1,4 @@
-import logo from './logo.svg';
 import './App.css';
-import {useState, useEffect} from 'react';
 import {
 	BrowserRouter as Router,
 	Switch,
@@ -10,7 +8,6 @@ import {
 
 //Import components
 import {Provider} from './components/Context';
-
 import Header from './components/Header';
 import Courses from './components/Courses';
 import CourseDetail from './components/CourseDetail';
@@ -26,7 +23,6 @@ import NotFound from './components/NotFound';
 import Error from './components/Error';
 
 function App() {
-	
   return (
     <Provider >
 		<Router>
