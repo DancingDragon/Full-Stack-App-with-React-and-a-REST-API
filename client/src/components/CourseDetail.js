@@ -61,8 +61,8 @@ function CourseDetail({history, ...props}) {
 				<React.Fragment>
 				  <div className="actions--bar">
 					<div className="wrap">
-					//If user if associated with the course show the update/delete buttons
 					  {authenticatedUser && authenticatedUser.id === courseUser.id ? 
+						//If user if associated with the course show the update/delete buttons
 						<React.Fragment>
 
 						  <Link className="button" to={`/courses/${id}/update/`}>
