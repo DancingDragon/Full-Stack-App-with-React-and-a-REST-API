@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import {useEffect} from 'react';
 import {withRouter, Redirect} from 'react-router-dom';
 import {Consumer} from './Context';
 

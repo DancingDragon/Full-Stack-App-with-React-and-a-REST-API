@@ -35,7 +35,7 @@ function CourseDetail({history, ...props}) {
 				history.push("/error");
 			}
 		})
-	}, []);
+	});
 	
 	return (
 	  <Consumer>

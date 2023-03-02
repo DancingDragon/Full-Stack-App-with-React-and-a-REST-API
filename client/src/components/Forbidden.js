@@ -1,6 +1,3 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-
 function Forbidden() {
 	return (
 		<div className="wrap">
