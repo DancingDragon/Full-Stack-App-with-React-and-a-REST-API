@@ -50,13 +50,18 @@ module.exports = (sequelize, DataTypes) => {
 		type: DataTypes.STRING,
 		allowNull: false,
 		//set the password to a hashed value instead of plaintext
-		set(value) {
-			this.setDataValue("password", bcryptjs.hashSync(value));
-		},
 		validate: {
 			notEmpty: {
 				msg: 'Password can\'t be empty.',
 			},
+			notNull: {
+				msg: 'Password can\'t be empty.',
+			},
+		},
+		set: function(value) {
+			if (value ){
+				this.setDataValue("password", bcryptjs.hashSync(value));
+			}
 		},
 	},
   }, {
